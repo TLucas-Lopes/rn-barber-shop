@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>RN Barber Shop - Agendamentos</title>
+
+  <link rel="stylesheet" href="CSS/style.css">
+</head>
+
+<body>
+
+  <div id="loader" class="loader hidden">Carregando...</div>
+  <div id="toast" class="toast hidden"></div>
+
+  <!-- ===== BRAND (LOGO + NOME) ===== -->
+  <header class="brand-client">
+    <div class="logo-wrap">
+      <img src="IMG/logo-rn.png" alt="RN Barber Shop" class="logo-client" />
+      <span class="logo-shine" aria-hidden="true"></span>
+    </div>
+
+    <h1 class="brand-title">RN Barber Shop</h1>
+    <p class="brand-subtitle">Agende seu horário online • rápido e prático</p>
+  </header>
+
+  <div class="grid">
+
+    <!-- ===== NOVO AGENDAMENTO ===== -->
+    <div class="card">
+      <h2>Novo agendamento</h2>
+
+      <div id="msg" class="msg"></div>
+
+      <div class="row">
+        <div>
+          <label>Cliente</label>
+          <input id="cliente" placeholder="Ex: Tura" />
+        </div>
+
+        <div>
+          <label>Serviço</label>
+          <select id="servicoId">
+            <option value="">Carregando serviços...</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- ✅ BARBEIRO COM FOTO -->
+      <div class="row" style="margin-top:10px;">
+        <div style="grid-column:1 / -1;">
+          <label>Barbeiro</label>
+
+          <div class="barber-picker">
+            <label class="barber-card">
+              <input type="radio" name="barbeiro" id="barbeiroRenan" value="Renan Corte" checked>
+              <img src="IMG/renan.png" alt="Renan Corte">
+              <div class="barber-info">
+                <strong>Renan Corte</strong>
+                <span class="muted">Disponível</span>
+              </div>
+            </label>
+          </div>
+
+          <small class="muted">Escolha o barbeiro antes de confirmar o agendamento.</small>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:10px;">
+        <div>
+          <label>Data</label>
+          <input id="data" type="date" />
+
+          <label>Horário</label>
+          <select id="hora">
+            <option value="">Selecione um horário</option>
+          </select>
+
+          <small class="muted">Os horários são carregados conforme a data.</small>
+        </div>
+      </div>
+
+      <div class="actions" style="margin-top:12px;">
+        <button class="btn" onclick="criar()">Agendar</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="JS/app.js"></script>
+</body>
+</html>

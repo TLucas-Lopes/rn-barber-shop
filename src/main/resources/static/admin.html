@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin - Barbearia</title>
+
+  <link rel="stylesheet" href="CSS/style.css">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- JS do admin -->
+  <script src="JS/admin.js" defer></script>
+</head>
+
+<body>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <div class="admin-shell">
+
+    <!-- ✅ overlay mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="adminSidebar">
+      <div class="brand">
+        <div class="logo"></div>
+        <div class="title">
+          <strong>Barbearia</strong>
+          <span>Painel Admin</span>
+        </div>
+      </div>
+
+      <nav class="nav" id="adminNav">
+        <a href="#agenda" class="active" data-target="sec-agenda">📅 <span>Agendamentos do dia</span></a>
+        <a href="#reserva" data-target="sec-reserva">➕ <span>Reserva (admin)</span></a>
+        <a href="#servicos" data-target="sec-servicos">💲 <span>Serviços</span></a>
+        <a href="#config" data-target="sec-config">⚙️ <span>Funcionamento</span></a>
+        <a href="#bloqueios" data-target="sec-bloqueios">🚫 <span>Bloqueios</span></a>
+        <a href="#relatorio" data-target="sec-relatorio">📊 <span>Relatórios</span></a>
+        <a href="#senha" data-target="sec-senha">🔐 <span>Trocar senha</span></a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="btn btn2" type="button" onclick="location.reload()">↻ Atualizar</button>
+      </div>
+    </aside>
+
+    <!-- CONTENT -->
+    <section class="content">
+
+      <!-- TOPBAR -->
+      <header class="topbar">
+        <div class="topbar-inner">
+          <div>
+            <button class="menu-btn" id="btnMenu" type="button" aria-label="Menu">⋯</button>
+            <h1 id="pageTitle">Agendamentos do dia</h1>
+            <p id="pageSub">Abrindo automaticamente e atualizando a cada 30s.</p>
+          </div>
+
+          <div class="top-actions">
+            <span class="badge">Admin</span>
+          </div>
+        </div>
+      </header>
+
+      <main class="main">
+
+        <!-- ================= AGENDA DO DIA ================= -->
+        <section class="card view" id="sec-agenda">
+          <div class="actions" style="justify-content:space-between;align-items:center;">
+            <h2 style="margin:0;">📅 Agendamentos do dia</h2>
+            <span class="pill">Total: <strong id="contadorDia">0</strong></span>
+          </div>
+
+          <p class="muted">Abre automático no dia de hoje e recarrega sozinho na agenda.</p>
+
+          <div class="row" style="margin-top:10px;">
+            <div class="field">
+              <label for="dataDia">Data</label>
+              <input id="dataDia" type="date" />
+            </div>
+
+            <div class="actions" style="align-items:flex-end;">
+              <button class="btn2" type="button" onclick="carregarAgendaDia()">Carregar</button>
+            </div>
+          </div>
+
+          <div style="overflow:auto;margin-top:10px;">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Cliente</th>
+                  <th>Serviço</th>
+                  <th>Hora</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyDia"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ================= RESERVA PELO ADMIN ================= -->
+        <section class="card view hidden" id="sec-reserva">
+          <h2>🧓 Reserva pelo Admin</h2>
+          <p class="muted">Para clientes que não conseguem agendar pelo celular.</p>
+
+          <div class="row" style="margin-top:10px;">
+            <div class="field">
+              <label for="admCliente">Cliente</label>
+              <input id="admCliente" type="text" placeholder="Nome do cliente" />
+            </div>
+
+            <div class="field">
+              <label for="admServicoId">Serviço</label>
+              <select id="admServicoId"></select>
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:10px;">
+            <div class="field">
+              <label for="admData">Data</label>
+              <input id="admData" type="date" />
+            </div>
+
+            <div class="field">
+              <label for="admHora">Horário</label>
+              <select id="admHora">
+                <option value="">Selecione uma data primeiro</option>
+              </select>
+            </div>
+
+            <div class="actions" style="align-items:flex-end;">
+              <button class="btn" type="button" onclick="reservarAdmin()">Reservar</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= SERVIÇOS / PREÇOS ================= -->
+        <section class="card view hidden" id="sec-servicos">
+          <div class="actions" style="justify-content:space-between;align-items:center;">
+            <h2 style="margin:0;">💲 Serviços e Preços</h2>
+            <span class="pill" id="contadorServicos">0</span>
+          </div>
+
+          <p class="muted">Cadastre e edite serviços. O cliente só vê os serviços ATIVOS.</p>
+
+          <div class="row" style="margin-top:10px;">
+            <div class="field">
+              <label for="srvNome">Nome do serviço</label>
+              <input id="srvNome" type="text" placeholder="Ex: Corte" />
+            </div>
+
+            <div class="field">
+              <label for="srvPreco">Preço (R$)</label>
+              <input id="srvPreco" type="number" step="0.01" min="0" placeholder="Ex: 25.00" />
+            </div>
+
+            <div class="field" style="min-width:160px;">
+              <label style="opacity:0;">Ação</label>
+              <button class="btn" type="button" onclick="criarServico()">Adicionar</button>
+            </div>
+          </div>
+
+          <div style="overflow:auto;margin-top:10px;">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:70px;">ID</th>
+                  <th>Nome</th>
+                  <th style="width:130px;">Preço</th>
+                  <th style="width:120px;">Ativo</th>
+                  <th style="width:260px;">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyServicos"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ================= FUNCIONAMENTO ================= -->
+        <section class="card view hidden" id="sec-config">
+          <h2>⚙️ Funcionamento</h2>
+          <p class="muted">Defina os dias e horários em que a barbearia atende.</p>
+
+          <h3>Dias ativos</h3>
+          <div class="dias-grid">
+            <label><input type="checkbox" id="seg"> Segunda</label>
+            <label><input type="checkbox" id="ter"> Terça</label>
+            <label><input type="checkbox" id="qua"> Quarta</label>
+            <label><input type="checkbox" id="qui"> Quinta</label>
+            <label><input type="checkbox" id="sex"> Sexta</label>
+            <label><input type="checkbox" id="sab"> Sábado</label>
+            <label><input type="checkbox" id="dom"> Domingo</label>
+          </div>
+
+          <div class="row" style="margin-top:12px;">
+            <div class="field">
+              <label for="intervaloMin">Intervalo (min)</label>
+              <input id="intervaloMin" type="number" min="5" step="5" value="30" />
+            </div>
+
+            <div class="field">
+              <label for="iniManha">Manhã - início</label>
+              <input id="iniManha" type="time" value="08:00" />
+            </div>
+
+            <div class="field">
+              <label for="fimManha">Manhã - fim</label>
+              <input id="fimManha" type="time" value="12:00" />
+            </div>
+
+            <div class="field">
+              <label for="iniTarde">Tarde - início</label>
+              <input id="iniTarde" type="time" value="14:00" />
+            </div>
+
+            <div class="field">
+              <label for="fimTarde">Tarde - fim</label>
+              <input id="fimTarde" type="time" value="19:00" />
+            </div>
+          </div>
+
+          <div class="actions actions-right" style="margin-top:12px;">
+            <button class="btn2" type="button" onclick="carregarConfig()">🔄 Recarregar</button>
+            <button class="btn" type="button" onclick="salvarConfig()">💾 Salvar</button>
+          </div>
+        </section>
+
+        <!-- ================= BLOQUEIO DE DIAS ================= -->
+        <section class="card view hidden" id="sec-bloqueios">
+          <div class="actions" style="justify-content:space-between;align-items:center;">
+            <h2 style="margin:0;">🚫 Bloquear Dia</h2>
+            <span class="pill" id="contadorBloqueios">0</span>
+          </div>
+
+          <p class="muted">Bloqueie um dia inteiro (não aparece para o cliente).</p>
+
+          <div class="row" style="margin-top:10px;">
+            <div class="field">
+              <label for="dataBloqueio">Data</label>
+              <input id="dataBloqueio" type="date" />
+            </div>
+
+            <div class="actions" style="align-items:flex-end;">
+              <button class="btn danger" type="button" onclick="bloquearDia()">Bloquear</button>
+            </div>
+          </div>
+
+          <div style="overflow:auto;margin-top:10px;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Ação</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyBloqueios"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ================= RELATÓRIOS ================= -->
+        <section class="card view hidden" id="sec-relatorio">
+          <div class="actions" style="justify-content:space-between;align-items:center;">
+            <h2 style="margin:0;">📊 Relatórios</h2>
+          </div>
+
+          <div class="row" style="margin-top:10px;">
+            <div class="field">
+              <label for="anoRelatorio">Ano</label>
+              <input id="anoRelatorio" type="number" value="2026" />
+            </div>
+
+            <div class="actions" style="align-items:flex-end;">
+              <button class="btn2" type="button" onclick="carregarRelatorioMensal()">Carregar</button>
+            </div>
+          </div>
+
+          <div style="margin-top:10px;">
+            <canvas id="graficoMensal" height="120"></canvas>
+            <hr style="margin:20px 0;">
+
+            <h3 style="margin:0;">📊 Relatório semanal</h3>
+
+            <div class="actions" style="margin-top:10px;">
+              <button class="btn2" type="button" onclick="carregarRelatorioSemanal()">
+                Carregar semana atual
+              </button>
+            </div>
+
+            <div style="margin-top:10px;">
+              <canvas id="graficoSemanal" height="120"></canvas>
+            </div>
+
+            <div id="resumoSemanal" style="margin-top:10px;font-weight:bold;"></div>
+          </div>
+        </section>
+
+        <!-- ================= SENHA ================= -->
+        <section class="card view hidden" id="sec-senha">
+          <h2>🔐 Trocar senha do Admin</h2>
+          <p class="muted">Altere a senha de acesso do painel.</p>
+
+          <div class="row" style="margin-top:10px;">
+            <div class="field">
+              <label>Senha atual</label>
+              <input id="senhaAtual" type="password" />
+            </div>
+
+            <div class="field">
+              <label>Nova senha</label>
+              <input id="novaSenha" type="password" />
+            </div>
+
+            <div class="field">
+              <label>Confirmar nova senha</label>
+              <input id="confirmarSenha" type="password" />
+            </div>
+
+            <div class="actions" style="align-items:flex-end;">
+              <button class="btn" type="button" onclick="trocarSenhaAdmin()">Trocar</button>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </section>
+  </div>
+
+  <!-- ✅ NAVEGAÇÃO + AUTOLOAD + AUTOREFRESH 30s + MENU RESPONSIVO + MINI NO SCROLL -->
+  <script>
+    const VIEW_META = {
+      "sec-agenda": ["Agendamentos do dia", "Abrindo automaticamente e atualizando a cada 30s."],
+      "sec-reserva": ["Reserva (admin)", "Reserve manualmente para clientes."],
+      "sec-servicos": ["Serviços", "Crie, edite e ative/inative serviços."],
+      "sec-config": ["Funcionamento", "Dias ativos, horários e intervalo."],
+      "sec-bloqueios": ["Bloqueios", "Bloqueie/desbloqueie dias inteiros."],
+      "sec-relatorio": ["Relatórios", "Relatório mensal e semanal."],
+      "sec-senha": ["Trocar senha", "Altere a senha do painel admin."]
+    };
+
+    let autoRefreshInterval = null;
+
+    function showSection(id) {
+      document.querySelectorAll(".view").forEach(sec => sec.classList.add("hidden"));
+      const el = document.getElementById(id);
+      if (el) el.classList.remove("hidden");
+
+      document.querySelectorAll("#adminNav a").forEach(a => a.classList.remove("active"));
+      const link = document.querySelector(`#adminNav a[data-target="${id}"]`);
+      if (link) link.classList.add("active");
+
+      const t = document.getElementById("pageTitle");
+      const s = document.getElementById("pageSub");
+      const meta = VIEW_META[id] || ["Admin", ""];
+      if (t) t.textContent = meta[0];
+      if (s) s.textContent = meta[1];
+
+      if (id === "sec-agenda") startAutoRefresh();
+      else stopAutoRefresh();
+
+      // no mobile: fecha ao clicar
+      if (isMobile()) closeSidebar();
+    }
+
+    function setHojeNoInputDate(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (el.value) return;
+
+      const hoje = new Date();
+      const yyyy = hoje.getFullYear();
+      const mm = String(hoje.getMonth() + 1).padStart(2, "0");
+      const dd = String(hoje.getDate()).padStart(2, "0");
+      el.value = `${yyyy}-${mm}-${dd}`;
+    }
+
+    function whenFnReady(fnName, timeoutMs = 6000) {
+      return new Promise((resolve, reject) => {
+        const start = Date.now();
+        const t = setInterval(() => {
+          if (typeof window[fnName] === "function") {
+            clearInterval(t);
+            resolve(window[fnName]);
+            return;
+          }
+          if (Date.now() - start > timeoutMs) {
+            clearInterval(t);
+            reject(new Error(`Função ${fnName} não carregou.`));
+          }
+        }, 50);
+      });
+    }
+
+    async function carregarAgendaComSeguranca() {
+      try {
+        const carregar = await whenFnReady("carregarAgendaDia", 6000);
+        await carregar();
+      } catch (e) {
+        console.error("Erro ao atualizar agenda:", e);
+      }
+    }
+
+    function startAutoRefresh() {
+      if (autoRefreshInterval) return;
+      autoRefreshInterval = setInterval(() => {
+        carregarAgendaComSeguranca();
+      }, 30000);
+    }
+
+    function stopAutoRefresh() {
+      if (autoRefreshInterval) {
+        clearInterval(autoRefreshInterval);
+        autoRefreshInterval = null;
+      }
+    }
+
+    // ===== MENU RESPONSIVO + MINI NO SCROLL =====
+    const sidebar = document.getElementById("adminSidebar");
+    const overlay = document.getElementById("sidebarOverlay");
+    const btnMenu = document.getElementById("btnMenu");
+
+    function isMobile() {
+      return window.matchMedia("(max-width: 900px)").matches;
+    }
+
+    function openSidebar() {
+      sidebar?.classList.add("is-open");
+      overlay?.classList.add("is-show");
+    }
+
+    function closeSidebar() {
+      sidebar?.classList.remove("is-open");
+      overlay?.classList.remove("is-show");
+    }
+
+    function toggleSidebar() {
+      if (sidebar?.classList.contains("is-open")) closeSidebar();
+      else openSidebar();
+    }
+
+    function onScrollMini() {
+      // no mobile não usa mini, usa offcanvas
+      if (isMobile()) {
+        sidebar?.classList.remove("is-mini");
+        return;
+      }
+      const y = window.scrollY || document.documentElement.scrollTop || 0;
+      if (y > 60) sidebar?.classList.add("is-mini");
+      else sidebar?.classList.remove("is-mini");
+    }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      showSection("sec-agenda");
+      setHojeNoInputDate("dataDia");
+      await carregarAgendaComSeguranca();
+
+      const nav = document.getElementById("adminNav");
+      if (nav) {
+        nav.addEventListener("click", (e) => {
+          const a = e.target.closest("a[data-target]");
+          if (!a) return;
+          e.preventDefault();
+          showSection(a.dataset.target);
+        });
+      }
+
+      // botão ⋯
+      btnMenu?.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (isMobile()) toggleSidebar();
+        else sidebar?.classList.toggle("is-mini");
+      });
+
+      overlay?.addEventListener("click", closeSidebar);
+
+      window.addEventListener("scroll", onScrollMini, { passive: true });
+      window.addEventListener("resize", () => {
+        closeSidebar();
+        onScrollMini();
+      });
+
+      onScrollMini();
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,506 @@
+:root{
+  --bg:#0b0f14;
+  --panel:#0f1621;
+  --panel2:#0c121b;
+  --text:#e7edf6;
+  --muted:#a9b4c3;
+  --line:rgba(255,255,255,.10);
+  --line2:rgba(255,255,255,.14);
+  --shadow: 0 18px 40px rgba(0,0,0,.45);
+  --radius: 18px;
+
+  --gold1:#d9b15f;
+  --gold2:#a67c2a;
+
+  --ok:#2ecc71;
+  --err:#ff5c5c;
+  --warn:#ffb020;
+}
+
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+html, body { overflow-x: hidden; }
+
+body{
+  margin:0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: radial-gradient(1000px 700px at 20% 0%, rgba(217,177,95,.10), transparent 60%),
+              radial-gradient(1000px 700px at 80% 0%, rgba(70,130,180,.10), transparent 60%),
+              var(--bg);
+  color:var(--text);
+}
+
+/* ===== Utils ===== */
+.hidden{ display:none !important; }
+.muted{ color:var(--muted); }
+hr{ border:0; border-top:1px solid var(--line); }
+
+h1,h2,h3{ margin:0 0 8px; }
+h2{ font-size: 18px; }
+h3{ font-size: 15px; color: var(--muted); }
+
+.table-wrap{ overflow:auto; margin-top:10px; }
+.chart-wrap{
+  background: rgba(255,255,255,.02);
+  border:1px solid var(--line);
+  border-radius: 14px;
+  padding:10px;
+}
+
+/* ===== Base layout cards ===== */
+.grid{
+  width:min(980px, 92vw);
+  margin: 18px auto 40px;
+  display:grid;
+  gap: 14px;
+}
+
+.card{
+  background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+}
+
+.row{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+@media (max-width: 760px){
+  .row{ grid-template-columns: 1fr; }
+}
+
+.field label{
+  display:block;
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0 0 6px;
+}
+
+/* ===== Inputs / Selects (fix do “branco”) ===== */
+input, select{
+  width:100%;
+  background: rgba(255,255,255,.04);
+  color: var(--text);
+  border: 1px solid var(--line2);
+  border-radius: 12px;
+  padding: 12px 12px;
+  outline: none;
+  transition: border .15s ease, transform .05s ease;
+}
+
+input:focus, select:focus{
+  border-color: rgba(217,177,95,.55);
+}
+
+/* garante que as options não fiquem brancas */
+select option{
+  background: #0e1520;
+  color: var(--text);
+}
+
+/* seta custom + evita branco em alguns browsers */
+select{
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  background-image:
+    linear-gradient(45deg, transparent 50%, rgba(255,255,255,.65) 50%),
+    linear-gradient(135deg, rgba(255,255,255,.65) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) calc(50% - 3px),
+    calc(100% - 12px) calc(50% - 3px);
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 34px;
+}
+
+/* ===== Buttons ===== */
+.actions{
+  display:flex;
+  gap:10px;
+  flex-wrap: wrap;
+}
+.actions-right{ justify-content:flex-end; }
+.actions-between{ justify-content:space-between; align-items:center; }
+
+.btn, .btn2, .danger{
+  border: 1px solid var(--line2);
+  border-radius: 14px;
+  padding: 10px 14px;
+  cursor:pointer;
+  color: var(--text);
+  background: rgba(255,255,255,.05);
+  transition: transform .08s ease, background .15s ease, border-color .15s ease;
+}
+
+.btn:hover, .btn2:hover, .danger:hover{ transform: translateY(-1px); }
+.btn:active, .btn2:active, .danger:active{ transform: translateY(0px); }
+
+.btn{
+  border-color: rgba(217,177,95,.35);
+  background: linear-gradient(180deg, rgba(217,177,95,.18), rgba(255,255,255,.03));
+}
+.btn2{
+  background: rgba(255,255,255,.04);
+}
+.danger{
+  border-color: rgba(255,92,92,.35);
+  background: linear-gradient(180deg, rgba(255,92,92,.18), rgba(255,255,255,.03));
+}
+
+.pill{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line2);
+  background: rgba(255,255,255,.04);
+  color: var(--text);
+  font-size: 12px;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(217,177,95,.35);
+  background: rgba(217,177,95,.10);
+  color: var(--text);
+  font-size: 12px;
+}
+
+/* ===== Toast ===== */
+.toast{
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 9999;
+  min-width: 220px;
+  max-width: 420px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--line2);
+  background: rgba(18, 26, 38, .92);
+  box-shadow: var(--shadow);
+  color: var(--text);
+}
+.toast.ok{ border-color: rgba(46,204,113,.35); }
+.toast.err{ border-color: rgba(255,92,92,.35); }
+.toast.warn{ border-color: rgba(255,176,32,.35); }
+
+/* ===== Loader ===== */
+.loader{
+  position: fixed;
+  inset: 0;
+  display:grid;
+  place-items:center;
+  background: rgba(0,0,0,.55);
+  color: var(--text);
+  z-index: 9998;
+  font-weight: 600;
+}
+
+/* ===== Tables ===== */
+table{
+  width:100%;
+  border-collapse: collapse;
+}
+
+th, td{
+  padding: 10px 10px;
+  border-bottom: 1px solid var(--line);
+  text-align:left;
+  font-size: 13px;
+}
+
+thead th{
+  color: var(--muted);
+  font-weight: 600;
+  background: rgba(255,255,255,.03);
+}
+
+td input[type="text"], td input[type="number"]{
+  padding: 10px 10px;
+  border-radius: 12px;
+}
+
+/* ============ CLIENT (brand/header) ============ */
+.brand-client{
+  width:min(980px, 92vw);
+  margin: 20px auto 10px;
+  text-align:center;
+}
+
+.logo-wrap{
+  width: 86px;
+  height: 86px;
+  margin: 0 auto 10px;
+  border-radius: 22px;
+  display:grid;
+  place-items:center;
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(217,177,95,.28);
+  box-shadow: 0 18px 40px rgba(0,0,0,.40);
+}
+
+.logo-client{
+  width: 74px;
+  height: 74px;
+  object-fit: contain;
+  border-radius: 16px;
+  display:block;
+}
+
+.brand-title{
+  font-size: 28px;
+  letter-spacing: .6px;
+  margin: 8px 0 2px;
+}
+
+.brand-subtitle{
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* brilho removido (garantia) */
+.logo-shine{ display:none !important; }
+
+/* ============ BARBER PICKER (cliente) ============ */
+.barber-picker{
+  display:flex;
+  gap:12px;
+  margin-top:8px;
+  flex-wrap: wrap;
+}
+
+.barber-card{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.04);
+  cursor:pointer;
+  width:100%;
+  max-width:420px;
+}
+
+.barber-card input{ display:none; }
+
+.barber-card img{
+  width:54px;
+  height:54px;
+  border-radius:14px;
+  object-fit:cover;
+  border:1px solid rgba(255,255,255,.15);
+  flex: 0 0 auto;
+}
+
+.barber-info{
+  display:flex;
+  flex-direction:column;
+  line-height:1.15;
+}
+.barber-info strong{ font-size: 14px; }
+.barber-info span{ font-size: 12px; color: var(--muted); }
+
+.barber-card:has(input:checked){
+  border-color:rgba(255,215,0,.55);
+  box-shadow:0 0 0 3px rgba(255,215,0,.12);
+}
+
+/* ============ ADMIN (layout único) ============ */
+.admin-shell{
+  display:flex !important;
+  width:100%;
+  min-height:100vh;
+}
+
+/* overlay mobile */
+.sidebar-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .2s ease;
+  z-index:49;
+}
+.sidebar-overlay.is-show{
+  opacity:1;
+  pointer-events:auto;
+}
+
+/* sidebar */
+.sidebar{
+  width:260px !important;
+  min-width:260px !important;
+  height:100vh;
+  position:sticky;
+  top:0;
+  padding: 14px;
+  border-right: 1px solid var(--line);
+  background: rgba(10,14,20,.75);
+  backdrop-filter: blur(10px);
+  overflow:auto;
+  transition: width .2s ease, min-width .2s ease, transform .25s ease;
+  z-index:50;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 10px;
+  padding: 8px 8px 12px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 10px;
+}
+
+.sidebar .title{
+  display:flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.sidebar .title strong{
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sidebar .title span{
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* nav */
+.nav{
+  display:flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.nav a{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  text-decoration:none;
+  color: var(--text);
+  border: 1px solid transparent;
+  background: transparent;
+  transition: background .15s ease, border-color .15s ease;
+}
+
+.nav a span{
+  color: var(--text);
+  font-size: 13px;
+  white-space: nowrap;
+  overflow:hidden;
+  text-overflow: ellipsis;
+}
+
+.nav a:hover{
+  background: rgba(255,255,255,.04);
+  border-color: var(--line);
+}
+
+.nav a.active{
+  background: rgba(217,177,95,.10);
+  border-color: rgba(217,177,95,.25);
+}
+
+.sidebar-footer{
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+/* content */
+.content{
+  flex:1;
+  min-width:0;
+  width:100%;
+  max-width:100%;
+  padding: 16px;
+}
+
+.topbar{
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(255,255,255,.03);
+  box-shadow: var(--shadow);
+}
+
+.topbar-inner{
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.topbar h1{ margin:0; font-size: 18px; }
+.topbar p{ margin: 6px 0 0; color: var(--muted); font-size: 13px; }
+.main{ margin-top: 14px; display:grid; gap: 14px; }
+
+/* mini (desktop scroll) */
+.sidebar.is-mini{
+  width:78px !important;
+  min-width:78px !important;
+  padding: 14px 10px;
+}
+.sidebar.is-mini .title,
+.sidebar.is-mini .sidebar-footer{
+  display:none !important;
+}
+.sidebar.is-mini .nav a span{
+  display:none !important;
+}
+.sidebar.is-mini .nav a{
+  justify-content:center;
+  gap:0;
+}
+
+/* tables no admin não podem estourar */
+.admin-shell .card, .admin-shell .main, .admin-shell table{
+  max-width: 100%;
+}
+.admin-shell table{
+  width:100%;
+}
+
+/* mobile: sidebar off-canvas */
+@media (max-width: 900px){
+  .sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    transform: translateX(-105%);
+    box-shadow: 20px 0 60px rgba(0,0,0,.45);
+  }
+  .sidebar.is-open{ transform: translateX(0); }
+
+  /* no mobile, não fica mini */
+  .sidebar.is-mini{
+    width:260px !important;
+    min-width:260px !important;
+    padding:14px;
+  }
+
+  /* tabelas roláveis */
+  table{ display:block; overflow-x:auto; }
+}
