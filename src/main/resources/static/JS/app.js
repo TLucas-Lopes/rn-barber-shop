@@ -1,9 +1,8 @@
 // ===================== CONFIG =====================
-const PORTA = 9095;
+const API_AG = '/agendamentos';
+const API_HORARIOS = '/horarios/disponiveis';
+const API_SERVICOS = '/servicos';
 
-const API_AG = `http://localhost:${PORTA}/agendamentos`;
-const API_HORARIOS = `http://localhost:${PORTA}/horarios/disponiveis`;
-const API_SERVICOS = `http://localhost:${PORTA}/servicos`;
 
 const WHATS_BARBEARIA = "77988185400"; // ✅ WhatsApp fixo da barbearia
 

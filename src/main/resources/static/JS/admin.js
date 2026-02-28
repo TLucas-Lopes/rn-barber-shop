@@ -1,22 +1,20 @@
 // ===================== CONFIG =====================
-const PORTA = 9095;
-const BASE_URL = `http://localhost:${PORTA}`;
 
-const API_CONFIG = `${BASE_URL}/admin/config`;
-const API_HORARIOS = `${BASE_URL}/horarios/disponiveis`;
-const API_AG = `${BASE_URL}/agendamentos`;
-const API_BLOQ = `${BASE_URL}/admin/bloqueios`;
+const API_CONFIG = `/admin/config`;
+const API_HORARIOS = `/horarios/disponiveis`;
+const API_AG = `/agendamentos`;
+const API_BLOQ = `/admin/bloqueios`;
 
 // serviços: admin (CRUD) e cliente (somente ativos)
-const API_ADMIN_SERVICOS = `${BASE_URL}/admin/servicos`;
-const API_SERVICOS_PUBLICO = `${BASE_URL}/servicos`;
+const API_ADMIN_SERVICOS = `/admin/servicos`;
+const API_SERVICOS_PUBLICO = `/servicos`;
 
 // Relatórios
-const API_REL_MENSAL = `${BASE_URL}/admin/relatorios/mensal`;
-const API_RELATORIO_SEMANAL = `${BASE_URL}/admin/relatorios/semanal`;
+const API_REL_MENSAL = `/admin/relatorios/mensal`;
+const API_RELATORIO_SEMANAL = `/admin/relatorios/semanal`;
 
 // Trocar senha
-const API_TROCAR_SENHA = `${BASE_URL}/admin/usuarios/trocar-senha`;
+const API_TROCAR_SENHA = `/admin/usuarios/trocar-senha`;
 
 const $ = (id) => document.getElementById(id);
 
